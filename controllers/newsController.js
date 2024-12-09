@@ -6,7 +6,7 @@ const createNews = async (req, res) => {
         const { title, description, heroImage, images, author, published } =
             req.body;
 
-        const newsItem = new News({
+        const newsItem = new NewsModel({
             title,
             description,
             heroImage,
@@ -44,8 +44,8 @@ const getAllNews = async (req, res) => {
 
 // Get a news item by ID
 const getNewsById = async (req, res) => {
+    const { id } = req.params;
     try {
-        const { id } = req.params;
         const newsItem = await NewsModel.findById(id);
 
         if (!newsItem) {
@@ -73,7 +73,7 @@ const updateNews = async (req, res) => {
             updates.publishedAt = null;
         }
 
-        const updatedNews = await News.findByIdAndUpdate(id, updates, {
+        const updatedNews = await NewsModel.findByIdAndUpdate(id, updates, {
             new: true,
         });
 

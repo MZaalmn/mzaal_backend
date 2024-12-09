@@ -16,7 +16,7 @@ router.get("/", getAllNews);
 // Get a news item by ID
 router.get("/:id", getNewsById);
 // Update a news item by ID
-router.put("/:id", updateNews);
+router.put("/edit/:id", updateNews);
 // Delete a news item by ID
 router.delete("/:id", deleteNews);
 
