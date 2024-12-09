@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const connectDB = require("./config/db");
 const cors = require("cors");
+const router = express.Router();
 
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
@@ -107,6 +108,116 @@ app.get("/get_job/:id", async (req, res) => {
     }
 });
 //----↑------↑-------↑--------↑-----↑-----↑----↑------Хэрэглэч ямар нэг зар харах------↑----------↑---------↑--------↑----//
+
+
+
+
+app.get("/read_user_jobs", async (req, res) => {
+    try {
+        const userEmail = req.headers['user-email'];  // Get the email from the request headers
+        if (!userEmail) {
+            return res.status(400).json({ error: "Email is required" });
+        }
+
+        const job_infos = await FormDataModel1.find({ email: userEmail });  // Filter jobs based on the email
+        res.send(job_infos);
+    } catch (err) {
+        res.status(500).send(err);
+    }
+});
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+//------------------------------------------------------------DELETE---------------------------------------
+app.delete('/delete_job/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      await FormDataModel1.findByIdAndDelete(id);
+      res.status(200).send({ message: 'Job deleted successfully' });
+    } catch (err) {
+      res.status(500).send({ message: 'Error deleting job' });
+    }
+  });
+//------------------------------------------------------------DELETE---------------------------------------
+
+
+
+
+
+// Update Job by ID
+app.put("/update_job/:id", upload.array("images", 3), async (req, res) => {
+    try {
+        const { id } = req.params;
+        const {
+            title,
+            description,
+            une,
+            latitude,
+            longitude,
+            zaalnii_bolomjuud,
+            email,
+        } = req.body;
+
+        // Handle new images (if any)
+        const images = req.files ? req.files.map((file) => file.path) : [];
+
+        // Find the job by ID and update it
+        const updatedJob = await FormDataModel1.findByIdAndUpdate(
+            id,
+            {
+                title,
+                description,
+                une,
+                latitude,
+                longitude,
+                images: images.length ? images : undefined, // Only update images if any
+                zaalnii_bolomjuud,
+                email,
+            },
+            { new: true } // This will return the updated document
+        );
+
+        if (!updatedJob) {
+            return res.status(404).json({ message: "Job not found" });
+        }
+
+        res.status(200).json(updatedJob);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Error updating job" });
+    }
+});
+
+
+
+
+
+
+
+  
+
+
+
+module.exports = router;
+
+
+
+
+
+
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
