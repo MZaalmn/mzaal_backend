@@ -6,6 +6,7 @@ const {
     createHall,
     updateHall,
     deleteHall,
+    getAllHallsWithOwners,
 } = require("../controllers/hallController");
 
 const router = express.Router();
