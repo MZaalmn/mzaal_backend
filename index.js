@@ -50,7 +50,7 @@ const storage = new CloudinaryStorage({
 });
 const upload = multer({ storage: storage });
 
-app.post("/create_job", upload.array("images", 3), async (req, res) => {
+app.post("/create_job", upload.array("images", 5), async (req, res) => {
     try {
         const {
             title,
@@ -204,8 +204,38 @@ app.put("/update_job/:id", upload.array("images", 3), async (req, res) => {
 
 
 
+const mongoose = require("mongoose"); 
+const buttonGridSchema = new mongoose.Schema({
+    grid: Array,
+});
+
+const ButtonGrid = mongoose.model('ButtonGrid', buttonGridSchema);
+
+// POST Route
+app.post('/api/grid', async (req, res) => {
+    try {
+        const newGrid = new ButtonGrid({ grid: req.body.grid });
+        await newGrid.save();
+        res.status(201).json({ message: 'Grid saved successfully!' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
 
+
+// GET Route
+app.get('/api/grid', async (req, res) => {
+    try {
+        const latestGrid = await ButtonGrid.findOne().sort({ _id: -1 }); // Retrieve the latest grid
+        if (!latestGrid) {
+            return res.status(404).json({ message: 'No grid data found' });
+        }
+        res.status(200).json(latestGrid);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
   
 
