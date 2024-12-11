@@ -27,7 +27,7 @@ const hallSchema = new mongoose.Schema(
         images: {
             urls: {
                 type: [String],
-                required: true,
+                required: false,
             },
         },
         heroImage: {
@@ -55,6 +55,13 @@ const hallSchema = new mongoose.Schema(
             ref: "User",
             required: true,
         },
+        type: [
+            {
+                type: [String],
+                ref: "HallType", // Reference to HallType model
+                required: true,
+            },
+        ],
     },
     { timestamps: true }
 );

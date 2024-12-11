@@ -3,7 +3,7 @@ const Hall = require("../models/HallModel");
 // Get all halls
 const getAllHalls = async (req, res) => {
     try {
-        const halls = await Hall.find();
+        const halls = await Hall.find().populate("type", "name icon status");
         res.status(200).json(halls);
     } catch (error) {
         res.status(500).json({

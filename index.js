@@ -10,6 +10,7 @@ const hallRoutes = require("./routes/hallRoutes");
 const newsRoutes = require("./routes/newsRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const ownerRoutes = require("./routes/ownerRoutes");
+const hallTypeRoutes = require("./routes/hallTypeRoutes");
 
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
@@ -40,6 +41,7 @@ app.use("/halls", hallRoutes);
 app.use("/news", newsRoutes);
 app.use("/orders", orderRoutes);
 app.use("/owners", ownerRoutes);
+app.use("/hallTypes", hallTypeRoutes);
 
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
@@ -97,7 +99,7 @@ app.get("/read_jobs", async (req, res) => {
 app.get("/get_job/:id", async (req, res) => {
     try {
         const jobId = req.params.id;
-        console.log(jobId); //(ACTIVE)
+        // console.log(jobId); //(ACTIVE)
         const jobInfo = await FormDataModel1.findById(jobId);
         if (!jobInfo) {
             return res.status(404).send("Олдсонгүй");
@@ -109,53 +111,31 @@ app.get("/get_job/:id", async (req, res) => {
 });
 //----↑------↑-------↑--------↑-----↑-----↑----↑------Хэрэглэч ямар нэг зар харах------↑----------↑---------↑--------↑----//
 
-
-
-
 app.get("/read_user_jobs", async (req, res) => {
     try {
-        const userEmail = req.headers['user-email'];  // Get the email from the request headers
+        const userEmail = req.headers["user-email"]; // Get the email from the request headers
         if (!userEmail) {
             return res.status(400).json({ error: "Email is required" });
         }
 
-        const job_infos = await FormDataModel1.find({ email: userEmail });  // Filter jobs based on the email
+        const job_infos = await FormDataModel1.find({ email: userEmail }); // Filter jobs based on the email
         res.send(job_infos);
     } catch (err) {
         res.status(500).send(err);
     }
 });
 
-  
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
 //------------------------------------------------------------DELETE---------------------------------------
-app.delete('/delete_job/:id', async (req, res) => {
+app.delete("/delete_job/:id", async (req, res) => {
     try {
-      const { id } = req.params;
-      await FormDataModel1.findByIdAndDelete(id);
-      res.status(200).send({ message: 'Job deleted successfully' });
+        const { id } = req.params;
+        await FormDataModel1.findByIdAndDelete(id);
+        res.status(200).send({ message: "Job deleted successfully" });
     } catch (err) {
-      res.status(500).send({ message: 'Error deleting job' });
+        res.status(500).send({ message: "Error deleting job" });
     }
-  });
+});
 //------------------------------------------------------------DELETE---------------------------------------
-
-
-
-
 
 // Update Job by ID
 app.put("/update_job/:id", upload.array("images", 3), async (req, res) => {
@@ -201,35 +181,30 @@ app.put("/update_job/:id", upload.array("images", 3), async (req, res) => {
     }
 });
 
-
-
-
-const mongoose = require("mongoose"); 
+const mongoose = require("mongoose");
 const buttonGridSchema = new mongoose.Schema({
     grid: Array,
 });
 
-const ButtonGrid = mongoose.model('ButtonGrid', buttonGridSchema);
+const ButtonGrid = mongoose.model("ButtonGrid", buttonGridSchema);
 
 // POST Route
-app.post('/api/grid', async (req, res) => {
+app.post("/api/grid", async (req, res) => {
     try {
         const newGrid = new ButtonGrid({ grid: req.body.grid });
         await newGrid.save();
-        res.status(201).json({ message: 'Grid saved successfully!' });
+        res.status(201).json({ message: "Grid saved successfully!" });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-
-
 // GET Route
-app.get('/api/grid', async (req, res) => {
+app.get("/api/grid", async (req, res) => {
     try {
         const latestGrid = await ButtonGrid.findOne().sort({ _id: -1 }); // Retrieve the latest grid
         if (!latestGrid) {
-            return res.status(404).json({ message: 'No grid data found' });
+            return res.status(404).json({ message: "No grid data found" });
         }
         res.status(200).json(latestGrid);
     } catch (error) {
@@ -237,17 +212,7 @@ app.get('/api/grid', async (req, res) => {
     }
 });
 
-  
-
-
-
 module.exports = router;
-
-
-
-
-
-
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
