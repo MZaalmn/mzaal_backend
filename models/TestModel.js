@@ -22,8 +22,9 @@ const FormDataSchema = new mongoose.Schema({
     longitude: Number,
     images: [String],
     zaalnii_bolomjuud: [String],
+    schedule: [String],
 });
 
-const FormDataModel1 = mongoose.model("job_details", FormDataSchema); //Энэ хэсэгт Collection нэрийг зааж өгнө
+const FormDataModel1 = mongoose.model("Энгийн_Заал", FormDataSchema); //Энэ хэсэгт Collection нэрийг зааж өгнө
 
 module.exports = FormDataModel1; //  <---   Export хийснээр өөр кодонд ашиглах боломжтой болно
